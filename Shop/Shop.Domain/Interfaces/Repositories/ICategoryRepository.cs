@@ -7,7 +7,7 @@ namespace Shop.Domain.Interfaces.Repositories
     {
         void Save(Category category);
 
-        void Update(Category category);
+        void Update(Category category, int id);
 
         Category GetCategoryById(int id);
 

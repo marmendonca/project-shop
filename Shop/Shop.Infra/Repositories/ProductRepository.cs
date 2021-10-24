@@ -84,7 +84,7 @@ namespace Shop.Infra.Repositories
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                var query = $"INSERT INTO [dbo].[Product]([Title], [Price], [CategoryId]) VALUES({product.Title}, {product.Price}, {product.CategoryId})";
+                var query = $"INSERT INTO [dbo].[Product]([Title], [Price], [CategoryId]) VALUES('{product.Title}', {product.Price}, {product.CategoryId})";
 
                 using (var command = new SqlCommand(query, connection))
                 {
@@ -99,14 +99,14 @@ namespace Shop.Infra.Repositories
             }
         }
 
-        public void Update(Product product)
+        public void Update(Product product, int id)
         {
             var connectionString = GetConnectionString();
 
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                var query = $"UPDATE PRODUCT SET [Title] = {product.Title}, [Price] = {product.Price} WHERE [Id] = {product.Id}";
+                var query = $"UPDATE Product SET [Title] = '{product.Title}', [Price] = {product.Price}, [CategoryId] = {product.CategoryId} WHERE [Id] = {id}";
 
                 using (var command = new SqlCommand(query, connection))
                 {

@@ -1,12 +1,13 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Shop.Domain.Entities;
+using Shop.Domain.Interfaces.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 
 namespace Shop.Infra.Repositories
 {
-    public class CategoryRepository
+    public class CategoryRepository : ICategoryRepository
     {
         private readonly IConfiguration _configuration;
 

@@ -2,12 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Shop.Application.Command;
 using Shop.Domain.Dtos.Request;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using Shop.Domain.Interfaces.Repositories;
+using System.Threading;
 using System.Threading.Tasks;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Shop.Api.Controllers
 {
@@ -16,22 +13,27 @@ namespace Shop.Api.Controllers
     public class ProductController : ControllerBase
     {
         private IMediator _mediator;
+        private readonly IProductRepository _productRepository;
 
-        public ProductController(IMediator mediator)
+        public ProductController(IMediator mediator, IProductRepository productRepository)
         {
             _mediator = mediator;
+            _productRepository = productRepository;
         }
 
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IActionResult GetAll()
         {
-            return new string[] { "value1", "value2" };
+            var products = _productRepository.GetAll();
+            return Ok(products);
         }
 
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<IActionResult> GetProductById(int id)
         {
-            return "value";
+            var result = await _mediator.Send(new GetProductByIdCommand(id), CancellationToken.None);
+
+            return Ok(result);
         }
 
         [HttpPost]
@@ -46,13 +48,22 @@ namespace Shop.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<IActionResult> Put(int id, [FromBody] ProductDto productDto)
         {
+            if (productDto == null)
+                return BadRequest("Requisição invalida");
+
+            var result = await _mediator.Send(new UpdateProductCommand(productDto, id));
+
+            return Ok(result);
         }
 
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
+            var result = await _mediator.Send(new DeleteProductCommand(id), CancellationToken.None);
+
+            return Ok(result);
         }
     }
 }

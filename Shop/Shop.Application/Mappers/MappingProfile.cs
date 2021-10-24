@@ -9,6 +9,7 @@ namespace Shop.Application.Mappers
         public MappingProfile()
         {
             CreateMap<ProductDto, Product>().ReverseMap();
+            CreateMap<CategoryDto, Category>().ReverseMap();
         }
     }
 }

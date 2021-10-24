@@ -35,6 +35,7 @@ namespace Shop.Api
             services.AddAutoMapper(assembly);
 
             services.AddTransient<IProductRepository, ProductRepository>();
+            services.AddTransient<ICategoryRepository, CategoryRepository>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

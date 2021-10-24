@@ -7,7 +7,7 @@ namespace Shop.Domain.Interfaces.Repositories
     {
         void Save(Product product);
 
-        void Update(Product product);
+        void Update(Product product, int id);
 
         Product GetProductById(int id);
 
