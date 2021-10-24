@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Shop.Application.Command;
-using Shop.Domain.Dtos;
+using Shop.Domain.Dtos.Request;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +15,12 @@ namespace Shop.Api.Controllers
     [ApiController]
     public class ProductController : ControllerBase
     {
-        private readonly IMediator _mediator;
+        private IMediator _mediator;
+
+        public ProductController(IMediator mediator)
+        {
+            _mediator = mediator;
+        }
 
         [HttpGet]
         public IEnumerable<string> Get()

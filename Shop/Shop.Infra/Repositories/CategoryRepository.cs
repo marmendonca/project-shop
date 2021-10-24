@@ -1,31 +1,30 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Shop.Domain.Entities;
-using Shop.Domain.Interfaces.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 
 namespace Shop.Infra.Repositories
 {
-    public class ProductRepository : IProductRepository
+    public class CategoryRepository
     {
         private readonly IConfiguration _configuration;
 
-        public ProductRepository(IConfiguration configuration)
+        public CategoryRepository(IConfiguration configuration)
         {
             _configuration = configuration;
         }
 
-        public List<Product> GetAll()
+        public List<Category> GetAll()
         {
-            var products = new List<Product>();
+            var categories = new List<Category>();
             var connectionString = GetConnectionString();
 
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
 
-                var sqlCommand = "GetProductList";
+                var sqlCommand = "GetCategoryList";
 
                 using (var command = new SqlCommand(sqlCommand, connection))
                 {
@@ -34,29 +33,27 @@ namespace Shop.Infra.Repositories
                     var reader = command.ExecuteReader();
                     while (reader.Read())
                     {
-                        var product = new Product();
-                        product.Id = Convert.ToInt32(reader["Id"]);
-                        product.Title = reader["Title"].ToString();
-                        product.Price = Convert.ToDecimal(reader["Price"]);
-                        product.CategoryId = Convert.ToInt32(reader["CategoryId"]);
-                        products.Add(product);
+                        var category = new Category();
+                        category.Id = Convert.ToInt32(reader["Id"]);
+                        category.Title = reader["Title"].ToString();
+                        categories.Add(category);
                     }
                 }
             }
 
-            return products;
+            return categories;
         }
 
-        public Product GetProductById(int id)
+        public Category GetCategoryById(int id)
         {
-            var product = new Product();
+            var category = new Category();
             var connectionString = GetConnectionString();
 
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
 
-                var sqlCommand = "GetProductById";
+                var sqlCommand = "GetCategoryById";
 
                 using (var command = new SqlCommand(sqlCommand, connection))
                 {
@@ -66,25 +63,23 @@ namespace Shop.Infra.Repositories
                     var reader = command.ExecuteReader();
                     while (reader.Read())
                     {
-                        product.Id = Convert.ToInt32(reader["Id"]);
-                        product.Title = reader["Title"].ToString();
-                        product.Price = Convert.ToDecimal(reader["Price"]);
-                        product.CategoryId = Convert.ToInt32(reader["CategoryId"]);
+                        category.Id = Convert.ToInt32(reader["Id"]);
+                        category.Title = reader["Title"].ToString();
                     }
                 }
             }
 
-            return product;
+            return category;
         }
 
-        public void Save(Product product)
+        public void Save(Category category)
         {
             var connectionString = GetConnectionString();
 
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                var query = $"INSERT INTO [dbo].[Product]([Title], [Price], [CategoryId]) VALUES({product.Title}, {product.Price}, {product.CategoryId})";
+                var query = $"INSERT INTO [dbo].[Category]([Title], [Price], [CategoryId]) VALUES({category.Title})";
 
                 using (var command = new SqlCommand(query, connection))
                 {
@@ -99,14 +94,14 @@ namespace Shop.Infra.Repositories
             }
         }
 
-        public void Update(Product product)
+        public void Update(Category category, int id)
         {
             var connectionString = GetConnectionString();
 
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                var query = $"UPDATE PRODUCT SET [Title] = {product.Title}, [Price] = {product.Price} WHERE [Id] = {product.Id}";
+                var query = $"UPDATE [Category] SET [Title] = {category.Title} WHERE [Id] = {id}";
 
                 using (var command = new SqlCommand(query, connection))
                 {
@@ -128,7 +123,7 @@ namespace Shop.Infra.Repositories
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                var query = $"DELETE FROM PRODUCT WHERE [Id] = {id}";
+                var query = $"DELETE FROM [Category] WHERE [Id] = {id}";
 
                 using (var command = new SqlCommand(query, connection))
                 {
