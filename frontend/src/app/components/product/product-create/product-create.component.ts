@@ -17,8 +17,7 @@ export class ProductCreateComponent implements OnInit {
     title: '',
     price: null
   }
-  selectedCategory: any
-  categorys: Category[]
+  public categorys = []
 
   constructor(
     private productService: ProductService, 
@@ -30,11 +29,14 @@ export class ProductCreateComponent implements OnInit {
   }
 
   createProduct() {
-    this.product.categoryId = parseInt(this.selectedCategory, 10);
     this.productService.create(this.product).subscribe(() => {
       this.productService.showMessage('Produto criado!')
       this.router.navigate(['/products'])
     })
+  }
+
+  selectChangeCategory(event: any) {
+    this.product.categoryId = parseInt(event.target.value)
   }
 
   cancel(): void {

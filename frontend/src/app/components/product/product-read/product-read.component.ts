@@ -12,9 +12,9 @@ import { CategoryService } from '../category.service';
 })
 export class ProductReadComponent implements OnInit {
 
-  products: Product[]
+  public products = []
   displayedColumns = ['id', 'name', 'price', 'category', 'action']
-  category: Category = {  }
+  public category: Category = undefined
 
   constructor(
     private productService: ProductService,
@@ -22,22 +22,19 @@ export class ProductReadComponent implements OnInit {
     
     private route: ActivatedRoute) { }
 
+
   ngOnInit(): void {
     this.productService.read().subscribe(products => {
       this.products = products;
+
       this.products.forEach(product => {
-        this.getCategoryById(product.categoryId);
-        console.log(this.category)
+        console.log(product)
+        this.category = new Category()
+        this.categoryService.readById(product.categoryId).subscribe((data: Category) => {
+          this.category = data;
+          product.categoryName = this.category.title;
+        })
       });
-      console.log(products)
     })
   }
-
-  getCategoryById(id: number): any {
-     this.categoryService.readById(id).subscribe(response => {
-      this.category = response;
-      console.log(this.category)
-    })
-  }
-
 }

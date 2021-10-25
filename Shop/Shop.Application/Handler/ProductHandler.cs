@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using MediatR;
 using Shop.Application.Command;
+using Shop.Application.Query;
 using Shop.Domain.Dtos.Response;
 using Shop.Domain.Entities;
 using Shop.Domain.Interfaces.Repositories;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -12,9 +14,10 @@ namespace Shop.Application.Handler
 {
     public class ProductHandler : 
         IRequestHandler<CreateProductCommand, ProductResponseDto>,
-        IRequestHandler<UpdateProductCommand, string>,
+        IRequestHandler<UpdateProductCommand, ProductResponseDto>,
         IRequestHandler<DeleteProductCommand, string>,
-        IRequestHandler<GetProductByIdCommand, ProductResponseDto>
+        IRequestHandler<GetProductByIdCommand, ProductResponseDto>,
+        IRequestHandler<GetAllProductsQuery, List<Product>>
     {
         private readonly IProductRepository _productRepository;
         private readonly ICategoryRepository _categoryRepository;
@@ -46,7 +49,7 @@ namespace Shop.Application.Handler
             return Task.FromResult(response);
         }
 
-        public Task<string> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
+        public Task<ProductResponseDto> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
         {
             var productFromDb = _productRepository.GetProductById(request.Id);
 
@@ -57,7 +60,12 @@ namespace Shop.Application.Handler
 
             _productRepository.Update(product, request.Id);
 
-            var response = "Produto atualizado com sucesso";
+            var response = new ProductResponseDto() 
+            {
+                Id = request.Id,
+                Title = product.Title,
+                Price = product.Price
+            };
 
             return Task.FromResult(response);
         }
@@ -87,6 +95,13 @@ namespace Shop.Application.Handler
             };
 
             return Task.FromResult(response);
+        }
+
+        public Task<List<Product>> Handle(GetAllProductsQuery request, CancellationToken cancellationToken)
+        {
+            var products = _productRepository.GetAll();
+
+            return Task.FromResult(products);
         }
     }
 }

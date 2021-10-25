@@ -1,31 +1,27 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Shop.Application.Command;
+using Shop.Application.Query;
 using Shop.Domain.Dtos.Request;
-using Shop.Domain.Interfaces.Repositories;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Shop.Api.Controllers
+namespace Shop.Api.Controllers.v1
 {
     [Route("api/v1/[controller]")]
     [ApiController]
-    public class ProductController : ControllerBase
+    public class ProductController : BaseController
     {
-        private IMediator _mediator;
-        private readonly IProductRepository _productRepository;
-
-        public ProductController(IMediator mediator, IProductRepository productRepository)
+        public ProductController(IMediator mediator) : base(mediator)
         {
-            _mediator = mediator;
-            _productRepository = productRepository;
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var products = _productRepository.GetAll();
+            var query = new GetAllProductsQuery();
+            var products = await _mediator.Send(query);
+
             return Ok(products);
         }
 
@@ -62,9 +58,9 @@ namespace Shop.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var result = await _mediator.Send(new DeleteProductCommand(id), CancellationToken.None);
+            await _mediator.Send(new DeleteProductCommand(id), CancellationToken.None);
 
-            return Ok(result);
+            return Ok();
         }
     }
 }

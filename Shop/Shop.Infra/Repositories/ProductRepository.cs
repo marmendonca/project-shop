@@ -84,7 +84,7 @@ namespace Shop.Infra.Repositories
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                var query = $"INSERT INTO [dbo].[Product]([Title], [Price], [CategoryId]) VALUES('{product.Title}', {product.Price}, {product.CategoryId})";
+                var query = $"INSERT INTO [dbo].[Product]([Title], [Price], [CategoryId], [DeletionDate], [CreationDate]) VALUES('{product.Title}', {product.Price}, {product.CategoryId}, NULL, GETDATE())";
 
                 using (var command = new SqlCommand(query, connection))
                 {
@@ -128,7 +128,7 @@ namespace Shop.Infra.Repositories
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                var query = $"DELETE FROM PRODUCT WHERE [Id] = {id}";
+                var query = $"UPDATE Product SET [DeletionDate] = GETDATE() WHERE [Id] = {id}";
 
                 using (var command = new SqlCommand(query, connection))
                 {

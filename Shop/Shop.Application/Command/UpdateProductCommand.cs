@@ -1,9 +1,10 @@
 ﻿using MediatR;
 using Shop.Domain.Dtos.Request;
+using Shop.Domain.Dtos.Response;
 
 namespace Shop.Application.Command
 {
-    public class UpdateProductCommand : IRequest<string>
+    public class UpdateProductCommand : IRequest<ProductResponseDto>
     {
         public UpdateProductCommand(ProductDto productDto, int id)
         {

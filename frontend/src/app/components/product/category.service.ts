@@ -24,14 +24,6 @@ export class CategoryService {
     })
   }
 
-  create(product: Product): Observable<Product> {
-    return this.http.post<Product>(this.baseUrl, product).pipe(
-      map((obj) => obj),
-      catchError(e => this.errorHandler(e))
-    );
-  }
-
-
   read(): Observable<Category[]> {
     return this.http.get<Category[]>(this.baseUrl).pipe(
       map((obj) => obj),
@@ -42,22 +34,6 @@ export class CategoryService {
   readById(id: number): Observable<Category> {
     const url = `${this.baseUrl}/${id}`
     return this.http.get<Category>(url).pipe(
-      map((obj) => obj),
-      catchError(e => this.errorHandler(e))
-    );
-  }
-
-  update(product: Product): Observable<Product> {
-    const url = `${this.baseUrl}/${product.id}`
-    return this.http.put<Product>(url, product).pipe(
-      map((obj) => obj),
-      catchError(e => this.errorHandler(e))
-    );
-  }
-
-  delete(id: number): Observable<Product> {
-    const url = `${this.baseUrl}/${id}`
-    return this.http.delete<Product>(url).pipe(
       map((obj) => obj),
       catchError(e => this.errorHandler(e))
     );

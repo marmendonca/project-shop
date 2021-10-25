@@ -10,7 +10,7 @@ import { Product } from './product.model';
 })
 export class ProductService {
 
-  baseUrl = "http://localhost:5000/api/v1/Product/"
+  baseUrl = "http://localhost:5000/api/v1/Product"
 
   constructor(private snackBar: MatSnackBar, private http: HttpClient) { }
 
@@ -46,20 +46,19 @@ export class ProductService {
     );
   }
 
-  update(product: Product): Observable<Product> {
+  update(product: Product): Observable<any> {
     const url = `${this.baseUrl}/${product.id}`
     return this.http.put<Product>(url, product).pipe(
       map((obj) => obj),
-      catchError(e => this.errorHandler(e))
+      catchError(e => this.errorHandler(e) 
+      )
+    
     );
   }
 
-  delete(id: number): Observable<Product> {
+  delete(id: number) {
     const url = `${this.baseUrl}/${id}`
-    return this.http.delete<Product>(url).pipe(
-      map((obj) => obj),
-      catchError(e => this.errorHandler(e))
-    );
+    return this.http.delete(url);
   }
 
   errorHandler(e: any): Observable<any> {

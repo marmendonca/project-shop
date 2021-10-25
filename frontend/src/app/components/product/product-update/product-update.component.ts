@@ -12,10 +12,9 @@ import { ProductService } from '../product.service';
 })
 export class ProductUpdateComponent implements OnInit {
 
-  product: Product;
-  categorys: Category[];
-  selectedCategory: any;
-  category: Category = { }
+  public product: Product = undefined
+  public categorys = [];
+  public category: Category = undefined
 
   constructor(
     private productService: ProductService, 
@@ -24,30 +23,27 @@ export class ProductUpdateComponent implements OnInit {
     private categoryService: CategoryService) { }
 
   ngOnInit(): void {
+    this.product = new Product();
     const id = +this.route.snapshot.paramMap.get('id')
     this.productService.readById(id).subscribe(product => {
       this.product = product
     });
 
-    this.categoryService.readById(this.product.categoryId);
+    this.category = new Category()
+    this.getCategoryList()
 
   }
 
   updateProduct(): void {
-    this.product.categoryId = parseInt(this.selectedCategory, 10);
     this.productService.update(this.product).subscribe(() => {
       this.productService.showMessage('Produto atualizado com sucesso!');
       this.router.navigate(['/products']);
 
     })
   }
-
-  getCategoryById(id: number): any {
-    this.categoryService.readById(id).subscribe(response => {
-     this.category = response;
-     console.log(this.category)
-   })
- }
+  selectChangeCategory(event: any){
+    this.product.categoryId = parseInt(event.target.value)
+  }
 
   getCategoryList(): any {
     this.categoryService.read().subscribe(response => {
