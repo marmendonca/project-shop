@@ -26,13 +26,49 @@ namespace Shop.Api
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
         public void ConfigureServices(IServiceCollection services)
         {
+            //services.AddCors(c =>
+            //{
+            //    c.AddPolicy("MyPolicy", builder => { builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader(); });
+            //});
+
+            //services.AddCors(c =>
+            //{
+            //    c.AddPolicy("AllowOrigin", options => options.AllowAnyMethod().AllowAnyHeader().WithOrigins("http://localhost:4200"));
+            //});
+
+            //services.AddCors(options =>
+            //{
+            //    options.AddPolicy(name: MyAllowSpecificOrigins,
+            //                      builder =>
+            //                      {
+            //                          builder.WithOrigins("http://localhost:4200",
+            //                                              "https://localhost:4200",
+            //                                              " http://localhost:5000/api/v1/Product/")
+            //                                              .AllowAnyHeader()
+            //                                              .AllowAnyMethod();
+            //                      });
+            //});
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("MyPolicy",
+                                  builder =>
+                                  {
+                                      builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+                                  });
+            });
+
+
             var assembly = AppDomain.CurrentDomain.Load("Shop.Application");
             services.AddMediatR(assembly);
 
             services.AddAutoMapper(assembly);
+
+
 
             services.AddTransient<IProductRepository, ProductRepository>();
             services.AddTransient<ICategoryRepository, CategoryRepository>();
@@ -54,9 +90,15 @@ namespace Shop.Api
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Shop.Api v1"));
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
+            app.UseStaticFiles();
 
             app.UseRouting();
+
+            //app.UseCors("MyPolicy");
+            app.UseCors("MyPolicy");
+
+            //app.UseCors(MyAllowSpecificOrigins);
 
             app.UseAuthorization();
 

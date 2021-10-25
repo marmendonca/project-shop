@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Shop.Application.Command;
 using Shop.Domain.Dtos.Request;

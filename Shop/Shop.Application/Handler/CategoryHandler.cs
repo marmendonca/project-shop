@@ -9,7 +9,9 @@ using System.Threading.Tasks;
 
 namespace Shop.Application.Handler
 {
-    public class CategoryHandler : IRequestHandler<CreateCategoryCommand, CategoryResponseDto>
+    public class CategoryHandler : 
+        IRequestHandler<CreateCategoryCommand, CategoryResponseDto>,
+        IRequestHandler<GetCategoryByIdCommand, CategoryResponseDto>
     {
         private readonly ICategoryRepository _categoryRepository;
         private readonly IMapper _mapper;
@@ -27,6 +29,19 @@ namespace Shop.Application.Handler
             _categoryRepository.Save(category);
 
             var response = new CategoryResponseDto();
+
+            return Task.FromResult(response);
+        }
+
+        public Task<CategoryResponseDto> Handle(GetCategoryByIdCommand request, CancellationToken cancellationToken)
+        {
+            var category = _categoryRepository.GetCategoryById(request.CategoryId);
+
+            var response = new CategoryResponseDto
+            {
+                Id = category.Id,
+                Title = category.Title
+            };
 
             return Task.FromResult(response);
         }
