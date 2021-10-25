@@ -111,7 +111,7 @@ namespace Shop.Infra.Repositories
                 using (var command = new SqlCommand(query, connection))
                 {
                     command.CommandType = System.Data.CommandType.Text;
-
+                    
                     var rows = command.ExecuteNonQuery();
                     if (rows != 1)
                     {
