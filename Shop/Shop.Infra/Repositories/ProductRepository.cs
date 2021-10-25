@@ -121,6 +121,7 @@ namespace Shop.Infra.Repositories
             }
         }
 
+
         public void Delete(int id)
         {
             var connectionString = GetConnectionString();
