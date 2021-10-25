@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Shop.Application.Command;
 using Shop.Application.Query;
-using Shop.Domain.Interfaces.Repositories;
 using System.Threading.Tasks;
 
 namespace Shop.Api.Controllers.v1
